@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import lombok.*;
 
+
+import java.util.Set;
+
 @Entity(name = "ACOUNT")
 @Builder
 @Getter
@@ -23,4 +26,11 @@ public class Acount {
 
     @Column(nullable = false)
     private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "acount_roles",
+            joinColumns = @JoinColumn(name = "acount_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
 }

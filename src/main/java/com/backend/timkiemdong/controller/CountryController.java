@@ -3,6 +3,7 @@ package com.backend.timkiemdong.controller;
 import com.backend.timkiemdong.entity.Country;
 import com.backend.timkiemdong.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 public class CountryController {
     @Autowired
     CountryService countryService;
+
 
    @PostMapping("/getAll")
     public List<Country> list() {

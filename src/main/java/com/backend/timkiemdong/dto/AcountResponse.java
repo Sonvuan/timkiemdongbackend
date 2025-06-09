@@ -2,6 +2,8 @@ package com.backend.timkiemdong.dto;
 
 import lombok.*;
 
+import java.util.Set;
+
 @Builder
 @Getter
 @Setter
@@ -10,5 +12,9 @@ import lombok.*;
 public class AcountResponse {
     private String name;
     private String email;
+        private Set<String> roles;
+    private Set<String> permissions;
+//    private String roles;
+//    private String permissions;
 
 }

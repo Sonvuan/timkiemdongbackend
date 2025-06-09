@@ -1,24 +1,27 @@
 package com.backend.timkiemdong.controller;
 
-import com.backend.timkiemdong.dto.ParaCurrencyRateDto;
-import com.backend.timkiemdong.dto.SearchInput;
-import com.backend.timkiemdong.dto.SearchResult;
+import com.backend.timkiemdong.dto.*;
 import com.backend.timkiemdong.entity.ParaCurrencyRate;
+import com.backend.timkiemdong.service.AcountService;
 import com.backend.timkiemdong.service.ParaCurrencyRateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/Currency")
+@RequestMapping("/admin")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ParaCurrencyRateController {
     @Autowired
     ParaCurrencyRateService paraCurrencyRateService;
+
+    @Autowired
+    AcountService acountService;
 
 
     @PostMapping("/getAll")
@@ -31,6 +34,7 @@ public class ParaCurrencyRateController {
     }
 
     // hiển thị
+
     @PostMapping("/list")
     public ResponseEntity<?> list(@RequestBody SearchInput searchInput) {
         SearchResult result = paraCurrencyRateService.findList(searchInput);
@@ -41,17 +45,18 @@ public class ParaCurrencyRateController {
     }
 
 
-
     //tao moi
+    @PreAuthorize("hasAnyAuthority('ADMIN','WRITE')")
     @PostMapping("/Create")
     public ResponseEntity<ParaCurrencyRateDto> create(@RequestBody ParaCurrencyRateDto paraCurrencyRateDto) {
         return ResponseEntity.ok(paraCurrencyRateService.create(paraCurrencyRateDto));
     }
 
     // sửa
+    @PreAuthorize("hasAnyAuthority('ADMIN','WRITE')")
     @PostMapping("/Update")
-    public ResponseEntity<ParaCurrencyRateDto> update( @RequestBody ParaCurrencyRateDto paraCurrencyRateDto) {
-        return ResponseEntity.ok(paraCurrencyRateService.update( paraCurrencyRateDto));
+    public ResponseEntity<ParaCurrencyRateDto> update(@RequestBody ParaCurrencyRateDto paraCurrencyRateDto) {
+        return ResponseEntity.ok(paraCurrencyRateService.update(paraCurrencyRateDto));
     }
 
 //    @PostMapping("/Update")
@@ -59,7 +64,7 @@ public class ParaCurrencyRateController {
 //        return ResponseEntity.ok(paraCurrencyRateService.update( id, paraCurrencyRateDto));
 //    }
 
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/delete")
     public ResponseEntity<String> delete(@RequestBody ParaCurrencyRate paraCurrencyRate) {
         paraCurrencyRateService.delete(paraCurrencyRate);
@@ -101,4 +106,39 @@ public class ParaCurrencyRateController {
         }
         return ResponseEntity.ok(result);
     }
+
+
+    // update role
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/UpdateRole")
+    public ResponseEntity<?> role(@RequestBody AcountRequest acountRequest) {
+        AcountResponse response = acountService.updateRole(acountRequest);
+        if (response == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không có dữ liệu tương ứng");
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    // update permission
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/UpdatePermission")
+    public ResponseEntity<?> permission(@RequestBody AcountRequest acountRequest) {
+        AcountResponse response = acountService.updatePermission(acountRequest);
+        if (response == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không có dữ liệu tương ứng");
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    // xoá permission
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/RemovePermission")
+    public ResponseEntity<?> removePermission(@RequestBody AcountRequest acountRequest) {
+        AcountResponse response = acountService.removePermission(acountRequest);
+        if (response == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không có dữ liệu tương ứng");
+        }
+        return ResponseEntity.ok(response);
+    }
+
 }
