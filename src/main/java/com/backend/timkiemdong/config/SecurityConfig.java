@@ -106,7 +106,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/admin/**","/Country/**").hasAnyRole("ADMIN","STAFF")
-                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN","STAFF")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception

@@ -34,7 +34,6 @@ public class ParaCurrencyRateController {
     }
 
     // hiển thị
-
     @PostMapping("/list")
     public ResponseEntity<?> list(@RequestBody SearchInput searchInput) {
         SearchResult result = paraCurrencyRateService.findList(searchInput);
